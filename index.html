@@ -1,0 +1,652 @@
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>포토월 라이브</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jua&family=Gothic+A1:wght@400;500;700;900&display=swap">
+<style>
+/* warm-glow: a red-lit house-party room — deep wine backdrop, golden string-light dots,
+   paper-cup red as the one loud accent. Poster view flips to warm cream paper for printing. */
+:root{
+  --bg-0:#2c0e18;
+  --bg-1:#5c2436;
+  --bg-2:#220a10;
+  --surface: rgba(255,244,232,.07);
+  --surface-strong: rgba(255,244,232,.12);
+  --fg:#fdf2e6;
+  --muted:#e3b7c0;
+  --accent:#ff5a63;
+  --accent-ink:#330a0e;
+  --gold:#ffcf6e;
+  --line:rgba(255,244,232,.16);
+  --radius:20px;
+  --font-display:'Jua','Noto Sans KR',sans-serif;
+  --font-body:'Gothic A1','Noto Sans KR',sans-serif;
+  color-scheme: dark;
+}
+html[data-view="poster"]{
+  --bg-0:#fbf2e2;
+  --bg-1:#fbf2e2;
+  --bg-2:#fbf2e2;
+  --surface:#fffaf1;
+  --surface-strong:#f6e9d2;
+  --fg:#331019;
+  --muted:#8a6a63;
+  --accent:#e6424c;
+  --accent-ink:#fff6ea;
+  --gold:#d79a2a;
+  --line:rgba(51,16,25,.16);
+  color-scheme: light;
+}
+*,*::before,*::after{box-sizing:border-box;}
+body{
+  margin:0;
+  background:
+    radial-gradient(ellipse 900px 520px at 50% -8%, var(--bg-1), transparent 60%),
+    var(--bg-0);
+  background-attachment:fixed;
+  color:var(--fg);
+  font-family:var(--font-body);
+  padding-left:max(16px, env(safe-area-inset-left,0px));
+  padding-right:max(16px, env(safe-area-inset-right,0px));
+  -webkit-font-smoothing:antialiased;
+}
+html[data-view="poster"] body{background:var(--bg-0);}
+h1,h2,h3{font-family:var(--font-display);font-weight:400;text-wrap:balance;margin:0;}
+p{margin:0;line-height:1.6;}
+a{color:inherit;}
+button,input{font-family:inherit;}
+.eyebrow{
+  font-family:var(--font-body);font-weight:800;font-size:.72rem;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--gold);
+}
+.shell{max-width:560px;margin:0 auto;padding-block:26px 56px;display:flex;flex-direction:column;gap:18px;}
+.lights{display:flex;gap:10px;align-items:center;}
+.lights span{
+  width:9px;height:9px;border-radius:50%;
+  background:var(--gold);
+  box-shadow:0 0 10px 2px rgba(255,207,110,.55);
+}
+.lights span:nth-child(3n+2){background:var(--accent);box-shadow:0 0 10px 2px rgba(255,90,99,.5);}
+.lights span:nth-child(4n+1){background:#ffe3a0;box-shadow:0 0 8px 2px rgba(255,227,160,.5);}
+.topbar{
+  display:flex;align-items:center;justify-content:space-between;
+  padding-top:max(6px, env(safe-area-inset-top,0px));
+}
+.back-link{
+  font-size:.82rem;font-weight:700;color:var(--muted);text-decoration:none;
+  display:inline-flex;align-items:center;gap:6px;
+}
+.card{
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  padding:22px;
+  backdrop-filter:blur(6px);
+}
+html[data-view="poster"] .card{backdrop-filter:none;}
+.btn{
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  width:100%;border:none;border-radius:14px;padding:16px 18px;
+  font-family:var(--font-body);font-weight:800;font-size:1rem;
+  cursor:pointer;text-decoration:none;text-align:center;
+  -webkit-tap-highlight-color:transparent;
+}
+.btn-accent{background:var(--accent);color:var(--accent-ink);}
+.btn-outline{background:transparent;color:var(--fg);border:1.5px solid var(--line);}
+.btn:active{transform:scale(.98);}
+.nav-grid{display:flex;flex-direction:column;gap:12px;}
+.nav-card{
+  display:flex;align-items:center;gap:16px;
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+  padding:18px 20px;text-decoration:none;color:var(--fg);
+}
+.nav-card .bar{width:5px;align-self:stretch;border-radius:4px;background:var(--accent);flex:none;}
+.nav-card:nth-child(2) .bar{background:var(--gold);}
+.nav-card:nth-child(3) .bar{background:#f0c3cb;}
+.nav-card .lbl{font-family:var(--font-display);font-size:1.1rem;font-weight:400;}
+.nav-card .sub{font-size:.8rem;color:var(--muted);margin-top:3px;}
+.nav-card:active{transform:scale(.99);}
+.qr-box{
+  background:#fffaf1;border-radius:14px;padding:16px;display:inline-flex;
+  align-items:center;justify-content:center;
+}
+.qr-wrap{display:flex;flex-direction:column;align-items:center;gap:14px;text-align:center;}
+.pill{
+  display:inline-flex;align-items:center;gap:6px;
+  background:var(--surface-strong);border:1px solid var(--line);
+  border-radius:999px;padding:7px 15px;font-size:.8rem;color:var(--muted);
+  font-variant-numeric:tabular-nums;
+}
+.field-row{display:flex;flex-direction:column;gap:6px;}
+.field-row label{font-size:.78rem;color:var(--muted);font-weight:700;}
+.field-row input{
+  background:var(--surface-strong);border:1px solid var(--line);border-radius:10px;
+  padding:11px 12px;color:var(--fg);font-size:.95rem;font-weight:700;
+}
+.field-row input:focus{outline:2px solid var(--accent);outline-offset:1px;}
+details{
+  background:var(--surface);border:1px solid var(--line);border-radius:14px;
+  padding:4px 16px;
+}
+details+details{margin-top:10px;}
+summary{
+  cursor:pointer;padding:14px 0;font-family:var(--font-display);font-size:.98rem;
+  list-style:none;display:flex;align-items:center;justify-content:space-between;
+}
+summary::-webkit-details-marker{display:none;}
+summary::after{content:'+';font-family:var(--font-body);font-weight:900;color:var(--gold);font-size:1.2rem;}
+details[open] summary::after{content:'–';}
+.checklist{margin:0 0 16px;padding:0;list-style:none;display:flex;flex-direction:column;gap:10px;font-size:.88rem;color:var(--fg);}
+.checklist li{display:flex;gap:10px;line-height:1.55;}
+.checklist li::before{content:'';flex:none;width:7px;height:7px;border-radius:2px;background:var(--accent);margin-top:7px;}
+.checklist b{color:var(--gold);}
+
+/* upload view */
+#view-upload .shell{max-width:420px;min-height:100svh;justify-content:center;padding-block:40px;}
+.upload-hero{text-align:center;display:flex;flex-direction:column;gap:8px;align-items:center;}
+.upload-hero h1{font-size:1.9rem;}
+.upload-actions{display:flex;flex-direction:column;gap:12px;}
+.upload-actions input[type=file]{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none;}
+.status-area{min-height:110px;display:flex;align-items:center;justify-content:center;}
+.status-idle{color:var(--muted);font-size:.85rem;text-align:center;}
+.spinner{width:34px;height:34px;border-radius:50%;border:4px solid var(--line);border-top-color:var(--accent);animation:spin 1s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.ok-badge{display:flex;flex-direction:column;align-items:center;gap:10px;}
+.ok-circle{
+  width:54px;height:54px;border-radius:50%;background:var(--accent);
+  display:flex;align-items:center;justify-content:center;font-size:1.5rem;color:var(--accent-ink);
+  animation:pop .35s ease;
+}
+@keyframes pop{from{transform:scale(.5);opacity:0;}to{transform:scale(1);opacity:1;}}
+.note{font-size:.78rem;color:var(--muted);text-align:center;line-height:1.6;}
+
+/* slideshow view */
+#view-slideshow{position:fixed;inset:0;background:#1a060c;overflow:hidden;}
+.ss-layer{position:absolute;inset:0;background-size:cover;background-position:center;opacity:0;transition:opacity 1.1s ease;}
+.ss-layer.live{opacity:1;}
+.ss-overlay{
+  position:absolute;left:0;right:0;bottom:0;
+  padding:18px max(18px, env(safe-area-inset-right,0px)) max(18px, env(safe-area-inset-bottom,0px)) max(18px, env(safe-area-inset-left,0px));
+  display:flex;justify-content:space-between;align-items:flex-end;
+  background:linear-gradient(transparent, rgba(20,5,10,.7));
+  color:#fdf2e6;pointer-events:none;
+}
+.ss-party{font-family:var(--font-display);font-size:1.15rem;}
+.ss-date{font-size:.75rem;color:#e3b7c0;}
+.ss-count{font-size:.75rem;color:#e3b7c0;font-variant-numeric:tabular-nums;}
+.ss-topbar{
+  position:absolute;top:max(16px, env(safe-area-inset-top,0px));left:max(16px, env(safe-area-inset-left,0px));
+  right:max(16px, env(safe-area-inset-right,0px));
+  display:flex;justify-content:space-between;align-items:center;
+}
+.ss-back{
+  background:rgba(20,5,10,.45);border:1px solid rgba(255,244,232,.22);color:#fdf2e6;
+  border-radius:10px;padding:9px 13px;font-size:.78rem;text-decoration:none;
+}
+.ss-fs{
+  background:rgba(20,5,10,.45);border:1px solid rgba(255,244,232,.22);color:#fdf2e6;
+  border-radius:10px;padding:9px 13px;font-size:.78rem;cursor:pointer;
+}
+.ss-empty{
+  position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:18px;text-align:center;padding:24px;color:#fdf2e6;
+}
+.ss-empty h2{font-size:1.4rem;}
+
+/* poster view */
+#view-poster .shell{max-width:640px;}
+.poster-sheet{
+  background:var(--surface);border:1px solid var(--line);border-radius:12px;
+  padding:48px 36px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:20px;
+  aspect-ratio:210/297;width:100%;justify-content:center;
+}
+.poster-sheet h1{font-size:2.1rem;line-height:1.2;color:var(--accent);}
+.poster-sheet .tag{font-size:1.05rem;font-weight:700;color:var(--fg);}
+.poster-sheet .foot{font-size:.85rem;color:var(--muted);}
+.print-hint{font-size:.78rem;color:var(--muted);text-align:center;}
+@media print{
+  body *{visibility:hidden;}
+  #view-poster, #view-poster *{visibility:visible;}
+  #view-poster{position:absolute;inset:0;}
+  #view-poster .shell{max-width:none;padding:0;margin:0;}
+  .no-print{display:none!important;}
+  .poster-sheet{border:none;border-radius:0;aspect-ratio:auto;width:210mm;height:297mm;}
+  @page{size:A4;margin:0;}
+}
+@media (max-width:420px){
+  .poster-sheet{padding:32px 22px;}
+  .poster-sheet h1{font-size:1.6rem;}
+}
+[hidden]{display:none!important;}
+</style>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+
+<!-- ===================== HOME ===================== -->
+<section id="view-home" class="view">
+  <div class="shell">
+    <div style="display:flex;flex-direction:column;gap:10px;">
+      <div class="lights"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+      <span class="eyebrow">포토월 라이브</span>
+      <h1 id="home-title" style="font-size:2rem;">파티 포토월</h1>
+    </div>
+
+    <div class="card" style="display:flex;flex-direction:column;gap:14px;">
+      <div class="field-row">
+        <label for="in-name">파티 이름</label>
+        <input id="in-name" type="text" maxlength="40" placeholder="우리의 파티">
+      </div>
+      <div class="field-row">
+        <label for="in-date">날짜</label>
+        <input id="in-date" type="text" maxlength="30" placeholder="2026. 11. 14.">
+      </div>
+      <p class="note" style="text-align:left;">이 기기에만 저장돼요. 포스터·슬라이드쇼에 바로 반영돼요.</p>
+    </div>
+
+    <div class="card qr-wrap">
+      <span class="eyebrow">업로드 QR</span>
+      <div class="qr-box"><div id="home-qr"></div></div>
+      <p class="note">이 QR을 스캔하면 업로드 페이지로 바로 연결돼요. 입구·바에는 포스터를 인쇄해 붙이세요.</p>
+      <span class="pill">지금까지 <span id="home-count">–</span>장 업로드됨</span>
+    </div>
+
+    <div class="nav-grid">
+      <a class="nav-card" href="#upload"><span class="bar"></span>
+        <span>
+          <div class="lbl">업로드 페이지</div>
+          <div class="sub">손님용 · QR이 여는 화면</div>
+        </span>
+      </a>
+      <a class="nav-card" href="#slideshow"><span class="bar"></span>
+        <span>
+          <div class="lbl">슬라이드쇼 열기</div>
+          <div class="sub">빔프로젝터·노트북에 전체화면으로</div>
+        </span>
+      </a>
+      <a class="nav-card" href="#poster"><span class="bar"></span>
+        <span>
+          <div class="lbl">안내 포스터</div>
+          <div class="sub">A4 인쇄용 · 입구·바에 부착</div>
+        </span>
+      </a>
+    </div>
+
+    <div>
+      <span class="eyebrow" style="display:block;margin-bottom:10px;">운영 체크리스트</span>
+
+      <details>
+        <summary>D-3 · 이 사이트 준비 (20분)</summary>
+        <ul class="checklist">
+          <li>위에서 <b>파티 이름·날짜</b> 입력 — 포스터·슬라이드쇼에 자동 반영돼요.</li>
+          <li><b>슬라이드쇼</b> 페이지를 한 번 열어서 빈 화면 + QR이 잘 뜨는지 확인.</li>
+          <li><b>업로드</b> 페이지에서 테스트 사진 1장 올려서 슬라이드쇼에 뜨는지 확인.</li>
+          <li>장소에 빔프로젝터 케이블(HDMI / USB-C) 맞는지, 벽에 마스킹테이프 붙여도 되는지 문의.</li>
+          <li>포스터 페이지를 열어 A4로 인쇄 — 입구·바 2장.</li>
+        </ul>
+      </details>
+
+      <details>
+        <summary>당일 18:30 · 세팅 (2명, 20분)</summary>
+        <ul class="checklist">
+          <li><b>포토월</b>: 크라프트지 12장을 4×3으로 이어 붙여 벽면 제작(약 85×90cm). 가운데에 파티 이름·날짜를 크게.</li>
+          <li><b>들고 찍는 액자</b>: 크라프트지 2~3장 가운데를 네모로 오려 액자 소품 제작, 테두리에 파티 이름.</li>
+          <li><b>방명록</b>: 포토월 한쪽에 "오늘의 한 줄 + 코드네임" 칸, 마카펜을 마스킹테이프로 고정.</li>
+          <li><b>소품 테이블</b>: 타투 스티커, 네온·꾸미기 스티커, 일회용 카메라 1대.</li>
+          <li><b>슬라이드쇼</b>: 노트북에서 이 사이트의 슬라이드쇼 페이지를 열고 전체화면 → 빔프로젝터로 출력.</li>
+          <li>입구·바에 인쇄한 포스터 부착.</li>
+        </ul>
+      </details>
+
+      <details>
+        <summary>파티 중 · 운영 수칙</summary>
+        <ul class="checklist">
+          <li>돌아다니는 운영진이 <b>포토 담당</b>을 겸해요 — 사진이 안 올라오면 먼저 찍어서 업로드.</li>
+          <li>시크릿 미션에 "모르는 사람과 사진 찍어서 올리기"를 넣으면 자연스럽게 늘어나요.</li>
+          <li>로그인이 필요 없어서 <b>모두</b> 바로 올릴 수 있어요.</li>
+          <li>얼굴 노출을 원치 않는 손님은 운영진에게 말해달라고 안내(포스터에 문구 포함).</li>
+        </ul>
+      </details>
+
+      <details>
+        <summary>자정 · 5분</summary>
+        <ul class="checklist">
+          <li>다 같이 모여 슬라이드쇼를 보기 — 화면은 이미 계속 최신 사진을 돌리고 있어요.</li>
+          <li>이 순간 단체사진도 찍어서 업로드.</li>
+        </ul>
+      </details>
+
+      <details>
+        <summary>파티 후</summary>
+        <ul class="checklist">
+          <li>이 사이트 링크를 참가자 단톡방에 공유 — 다들 자기 폰으로 전체 사진을 보고 저장할 수 있어요.</li>
+          <li>일회용 카메라는 현상 후 스캔본을 업로드 페이지로 추가.</li>
+          <li>포토월 방명록은 떼어서 사진 찍어 업로드.</li>
+        </ul>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== UPLOAD ===================== -->
+<section id="view-upload" class="view" hidden>
+  <div class="shell">
+    <div class="topbar no-print"><a class="back-link" href="#home">← 처음으로</a></div>
+    <div class="upload-hero">
+      <div class="lights"><span></span><span></span><span></span><span></span><span></span></div>
+      <span class="eyebrow" id="up-eyebrow">포토월 라이브</span>
+      <h1>사진을 올려주세요</h1>
+      <p class="note">찍은 사진이 화면에 바로 떠요. 로그인 필요 없어요.</p>
+    </div>
+
+    <div class="upload-actions">
+      <label class="btn btn-accent" for="file-camera">카메라로 찍기</label>
+      <input id="file-camera" type="file" accept="image/*" capture="environment">
+      <label class="btn btn-outline" for="file-gallery">갤러리에서 선택 (여러 장 가능)</label>
+      <input id="file-gallery" type="file" accept="image/*" multiple>
+    </div>
+
+    <div class="status-area" id="up-status">
+      <p class="status-idle">사진을 고르면 바로 업로드가 시작돼요.</p>
+    </div>
+
+    <p class="note">얼굴이 나오는 게 부담스러우면 운영진에게 말씀해주세요</p>
+  </div>
+</section>
+
+<!-- ===================== SLIDESHOW ===================== -->
+<section id="view-slideshow" class="view" hidden>
+  <div class="ss-layer" id="ss-a"></div>
+  <div class="ss-layer" id="ss-b"></div>
+  <div class="ss-empty no-print" id="ss-empty">
+    <span class="eyebrow" style="color:#ffcf6e;">포토월 라이브</span>
+    <h2>첫 사진을 기다리는 중…</h2>
+    <div class="qr-box"><div id="ss-qr"></div></div>
+    <p style="color:#e3b7c0;font-size:.85rem;">QR을 스캔해서 첫 사진을 올려주세요</p>
+  </div>
+  <div class="ss-topbar no-print">
+    <a class="ss-back" href="#home">← 처음으로</a>
+    <button class="ss-fs" id="ss-fs-btn">전체화면</button>
+  </div>
+  <div class="ss-overlay no-print">
+    <div>
+      <div class="ss-party" id="ss-party">파티 포토월</div>
+      <div class="ss-date" id="ss-date"></div>
+    </div>
+    <div class="ss-count" id="ss-count"></div>
+  </div>
+</section>
+
+<!-- ===================== POSTER ===================== -->
+<section id="view-poster" class="view" hidden>
+  <div class="shell">
+    <div class="topbar no-print"><a class="back-link" href="#home">← 처음으로</a></div>
+    <div class="no-print" style="display:flex;flex-direction:column;gap:4px;">
+      <span class="eyebrow">안내 포스터 · A4</span>
+      <h1 style="font-size:1.6rem;">입구 · 바 부착용</h1>
+      <p class="print-hint">Cmd/Ctrl + P 로 인쇄하세요 (A4, 여백 없음 권장)</p>
+    </div>
+
+    <div class="poster-sheet">
+      <div class="lights"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+      <span class="eyebrow" id="poster-eyebrow" style="color:var(--accent);">포토월 라이브</span>
+      <h1 id="poster-title">우리의 파티</h1>
+      <div class="qr-box"><div id="poster-qr"></div></div>
+      <div>
+        <div class="tag">찍은 사진 여기 올리면 화면에 바로 떠요</div>
+        <div class="tag" style="color:var(--accent);">→ QR 스캔</div>
+      </div>
+      <div class="foot">로그인 필요 없어요 · 얼굴 노출 원치 않으면 운영진에게 말해주세요</div>
+      <div class="foot" id="poster-date"></div>
+    </div>
+  </div>
+</section>
+
+<script>
+(function(){
+  "use strict";
+
+  var SUPABASE_URL = 'https://ypbdcsdpvopfzdhujecn.supabase.co';
+  var SUPABASE_KEY = 'sb_publishable_BIm90A1Rv3jsyAWD_6bJQg_TSxHGO2R';
+  var BUCKET = 'photos';
+
+  var sb = null;
+  try {
+    if (window.supabase && window.supabase.createClient) {
+      sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    }
+  } catch (e) { sb = null; }
+
+  var DEFAULTS = { name: '우리의 파티', date: '2026. 11. 14.' };
+
+  function loadSettings(){
+    try {
+      return {
+        name: localStorage.getItem('pw_name') || DEFAULTS.name,
+        date: localStorage.getItem('pw_date') || DEFAULTS.date
+      };
+    } catch(e){ return { name: DEFAULTS.name, date: DEFAULTS.date }; }
+  }
+  function saveSettings(s){
+    try {
+      localStorage.setItem('pw_name', s.name);
+      localStorage.setItem('pw_date', s.date);
+    } catch(e){}
+  }
+
+  function uploadUrl(){
+    try {
+      var u = new URL(location.href);
+      u.hash = '#upload';
+      return u.toString();
+    } catch(e){ return location.href; }
+  }
+
+  function renderQR(elId, text, size){
+    var el = document.getElementById(elId);
+    if (!el || typeof QRCode === 'undefined') return;
+    el.innerHTML = '';
+    new QRCode(el, {
+      text: text,
+      width: size || 200,
+      height: size || 200,
+      colorDark: '#331019',
+      colorLight: '#fffaf1',
+      correctLevel: QRCode.CorrectLevel.M
+    });
+  }
+
+  function applySettingsToText(){
+    var s = loadSettings();
+    var home = document.getElementById('home-title'); if (home) home.textContent = s.name;
+    var posterTitle = document.getElementById('poster-title'); if (posterTitle) posterTitle.textContent = s.name;
+    var posterDate = document.getElementById('poster-date'); if (posterDate) posterDate.textContent = s.date;
+    var ssParty = document.getElementById('ss-party'); if (ssParty) ssParty.textContent = s.name;
+    var ssDate = document.getElementById('ss-date'); if (ssDate) ssDate.textContent = s.date;
+    var upEyebrow = document.getElementById('up-eyebrow'); if (upEyebrow) upEyebrow.textContent = s.name;
+  }
+
+  function initHomeInputs(){
+    var nameInput = document.getElementById('in-name');
+    var dateInput = document.getElementById('in-date');
+    if (!nameInput || !dateInput) return;
+    var s = loadSettings();
+    nameInput.value = s.name;
+    dateInput.value = s.date;
+    function persist(){
+      saveSettings({ name: nameInput.value.trim() || DEFAULTS.name, date: dateInput.value.trim() || DEFAULTS.date });
+      applySettingsToText();
+    }
+    nameInput.addEventListener('input', persist);
+    dateInput.addEventListener('input', persist);
+  }
+
+  function refreshHomeCount(){
+    var countEl = document.getElementById('home-count');
+    if (!countEl || !sb) return;
+    sb.storage.from(BUCKET).list('', { limit: 1000 }).then(function(res){
+      var data = res && res.data;
+      if (data) countEl.textContent = data.filter(validName).length;
+    }).catch(function(){});
+  }
+
+  function validName(f){ return f && f.name && f.name.indexOf('.') !== -1 && f.name.charAt(0) !== '.'; }
+
+  // ---------- upload view ----------
+  function publicUrlFor(name){
+    if (!sb) return '';
+    var r = sb.storage.from(BUCKET).getPublicUrl(name);
+    return r && r.data ? r.data.publicUrl : '';
+  }
+
+  function uploadOne(file){
+    var ext = 'jpg';
+    var m = /\.([a-zA-Z0-9]+)$/.exec(file.name || '');
+    if (m) ext = m[1].toLowerCase();
+    var rand = (window.crypto && crypto.randomUUID) ? crypto.randomUUID() : (Date.now() + '-' + Math.random().toString(36).slice(2));
+    var path = rand + '.' + ext;
+    return sb.storage.from(BUCKET).upload(path, file, { contentType: file.type || 'image/jpeg', upsert: false });
+  }
+
+  function setUploadStatus(html){
+    var el = document.getElementById('up-status');
+    if (el) el.innerHTML = html;
+  }
+
+  function handleFiles(fileList){
+    if (!sb){
+      setUploadStatus('<p class="status-idle">업로드 서비스를 불러오지 못했어요. 새로고침 해주세요.</p>');
+      return;
+    }
+    var files = Array.prototype.slice.call(fileList || []);
+    if (!files.length) return;
+    var total = files.length, done = 0, failed = 0;
+    setUploadStatus('<div style="display:flex;flex-direction:column;align-items:center;gap:10px;"><div class="spinner"></div><p class="status-idle">업로드 중… (' + done + '/' + total + ')</p></div>');
+
+    function next(i){
+      if (i >= files.length){
+        if (failed === 0){
+          setUploadStatus('<div class="ok-badge"><div class="ok-circle">✓</div><p class="status-idle">고마워요! 화면에 곧 떠요</p></div>');
+        } else {
+          setUploadStatus('<p class="status-idle">' + (total - failed) + '장 업로드 완료, ' + failed + '장 실패했어요. 다시 시도해주세요.</p>');
+        }
+        setTimeout(function(){
+          setUploadStatus('<p class="status-idle">사진을 고르면 바로 업로드가 시작돼요.</p>');
+        }, 2600);
+        return;
+      }
+      uploadOne(files[i]).then(function(res){
+        done++;
+        if (res && res.error) failed++;
+      }).catch(function(){
+        done++; failed++;
+      }).then(function(){
+        setUploadStatus('<div style="display:flex;flex-direction:column;align-items:center;gap:10px;"><div class="spinner"></div><p class="status-idle">업로드 중… (' + done + '/' + total + ')</p></div>');
+        next(i + 1);
+      });
+    }
+    next(0);
+  }
+
+  function initUpload(){
+    var cam = document.getElementById('file-camera');
+    var gal = document.getElementById('file-gallery');
+    if (cam) cam.addEventListener('change', function(){ handleFiles(cam.files); cam.value = ''; });
+    if (gal) gal.addEventListener('change', function(){ handleFiles(gal.files); gal.value = ''; });
+  }
+
+  // ---------- slideshow view ----------
+  var ssPhotos = [];
+  var ssIdx = 0;
+  var ssLiveIsA = true;
+  var ssPollTimer = null, ssAdvanceTimer = null, ssStarted = false;
+
+  function ssRefreshList(){
+    if (!sb) return Promise.resolve();
+    return sb.storage.from(BUCKET).list('', { limit: 500, sortBy: { column: 'created_at', order: 'desc' } }).then(function(res){
+      var data = res && res.data;
+      if (data) ssPhotos = data.filter(validName).map(function(f){ return f.name; });
+      var countEl = document.getElementById('ss-count');
+      if (countEl) countEl.textContent = ssPhotos.length ? (ssPhotos.length + '장') : '';
+      var empty = document.getElementById('ss-empty');
+      if (empty) empty.hidden = ssPhotos.length > 0;
+    }).catch(function(){});
+  }
+
+  function ssShowNext(){
+    if (!ssPhotos.length) return;
+    var name = ssPhotos[ssIdx % ssPhotos.length];
+    ssIdx++;
+    var url = publicUrlFor(name);
+    if (!url) return;
+    var liveEl = document.getElementById(ssLiveIsA ? 'ss-a' : 'ss-b');
+    var nextEl = document.getElementById(ssLiveIsA ? 'ss-b' : 'ss-a');
+    var img = new Image();
+    img.onload = function(){
+      nextEl.style.backgroundImage = 'url(' + url + ')';
+      nextEl.classList.add('live');
+      liveEl.classList.remove('live');
+      ssLiveIsA = !ssLiveIsA;
+    };
+    img.src = url;
+  }
+
+  function initSlideshow(){
+    renderQR('ss-qr', uploadUrl(), 180);
+    var fsBtn = document.getElementById('ss-fs-btn');
+    if (fsBtn){
+      fsBtn.addEventListener('click', function(){
+        var el = document.getElementById('view-slideshow');
+        if (document.fullscreenElement){
+          if (document.exitFullscreen) document.exitFullscreen().catch(function(){});
+        } else if (el.requestFullscreen){
+          el.requestFullscreen().catch(function(){});
+        }
+      });
+    }
+    if (ssStarted) return;
+    ssStarted = true;
+    ssRefreshList().then(ssShowNext);
+    ssPollTimer = setInterval(ssRefreshList, 10000);
+    ssAdvanceTimer = setInterval(ssShowNext, 5000);
+  }
+
+  // ---------- router ----------
+  var VIEWS = ['home','upload','slideshow','poster'];
+
+  function currentView(){
+    var h = (location.hash || '').replace('#', '');
+    return VIEWS.indexOf(h) !== -1 ? h : 'home';
+  }
+
+  function onViewEnter(v){
+    applySettingsToText();
+    if (v === 'home'){
+      renderQR('home-qr', uploadUrl(), 180);
+      refreshHomeCount();
+    } else if (v === 'poster'){
+      renderQR('poster-qr', uploadUrl(), 220);
+    } else if (v === 'slideshow'){
+      initSlideshow();
+    }
+  }
+
+  function route(){
+    var v = currentView();
+    for (var i = 0; i < VIEWS.length; i++){
+      var el = document.getElementById('view-' + VIEWS[i]);
+      if (el) el.hidden = (VIEWS[i] !== v);
+    }
+    document.documentElement.setAttribute('data-view', v);
+    onViewEnter(v);
+  }
+
+  window.addEventListener('hashchange', route);
+  window.addEventListener('popstate', route);
+  document.addEventListener('DOMContentLoaded', function(){
+    initHomeInputs();
+    initUpload();
+    route();
+  });
+})();
+</script>

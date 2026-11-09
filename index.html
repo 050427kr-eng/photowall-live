@@ -1,47 +1,32 @@
 <meta name="claude:viewport-fit-sides" content="cover">
-<title>포토월 라이브</title>
+<title>Photowall Live</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jua&family=Gothic+A1:wght@400;500;700;900&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@600;700&family=Space+Mono:wght@400;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
 <style>
-/* warm-glow: a red-lit house-party room — deep wine backdrop, golden string-light dots,
-   paper-cup red as the one loud accent. Poster view flips to warm cream paper for printing. */
+/* late-lawn: a grainy night-photo backyard — muted olive dark, one burnt-orange accent,
+   tracked mono captions under a bold slab headline. Single dark world, no light mode. */
 :root{
-  --bg-0:#2c0e18;
-  --bg-1:#5c2436;
-  --bg-2:#220a10;
-  --surface: rgba(255,244,232,.07);
-  --surface-strong: rgba(255,244,232,.12);
-  --fg:#fdf2e6;
-  --muted:#e3b7c0;
-  --accent:#ff5a63;
-  --accent-ink:#330a0e;
-  --gold:#ffcf6e;
-  --line:rgba(255,244,232,.16);
-  --radius:20px;
-  --font-display:'Jua','Noto Sans KR',sans-serif;
-  --font-body:'Gothic A1','Noto Sans KR',sans-serif;
+  --bg-0:#14160f;
+  --bg-1:#262b1d;
+  --surface: rgba(236,228,210,.06);
+  --surface-strong: rgba(236,228,210,.1);
+  --fg:#ece4d2;
+  --muted:#9a9c84;
+  --accent:#d6792e;
+  --accent-ink:#1c1206;
+  --line:rgba(236,228,210,.14);
+  --radius:18px;
+  --font-display:'Zilla Slab',Georgia,serif;
+  --font-mono:'Space Mono',ui-monospace,Menlo,monospace;
+  --font-body:'IBM Plex Sans',system-ui,sans-serif;
   color-scheme: dark;
-}
-html[data-view="poster"]{
-  --bg-0:#fbf2e2;
-  --bg-1:#fbf2e2;
-  --bg-2:#fbf2e2;
-  --surface:#fffaf1;
-  --surface-strong:#f6e9d2;
-  --fg:#331019;
-  --muted:#8a6a63;
-  --accent:#e6424c;
-  --accent-ink:#fff6ea;
-  --gold:#d79a2a;
-  --line:rgba(51,16,25,.16);
-  color-scheme: light;
 }
 *,*::before,*::after{box-sizing:border-box;}
 body{
   margin:0;
   background:
-    radial-gradient(ellipse 900px 520px at 50% -8%, var(--bg-1), transparent 60%),
+    radial-gradient(ellipse 900px 460px at 50% -10%, rgba(38,43,29,.6), transparent 65%),
     var(--bg-0);
   background-attachment:fixed;
   color:var(--fg);
@@ -49,45 +34,41 @@ body{
   padding-left:max(16px, env(safe-area-inset-left,0px));
   padding-right:max(16px, env(safe-area-inset-right,0px));
   -webkit-font-smoothing:antialiased;
+  position:relative;
 }
-html[data-view="poster"] body{background:var(--bg-0);}
-h1,h2,h3{font-family:var(--font-display);font-weight:400;text-wrap:balance;margin:0;}
+body::after{
+  content:'';
+  position:fixed; inset:0; pointer-events:none; z-index:60;
+  opacity:.05; mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+}
+h1,h2,h3{font-family:var(--font-display);font-weight:700;text-wrap:balance;margin:0;}
 p{margin:0;line-height:1.6;}
 a{color:inherit;}
 button,input{font-family:inherit;}
 .eyebrow{
-  font-family:var(--font-body);font-weight:800;font-size:.72rem;
-  letter-spacing:.14em;text-transform:uppercase;color:var(--gold);
+  font-family:var(--font-mono);font-weight:700;font-size:.72rem;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--accent);
 }
 .shell{max-width:560px;margin:0 auto;padding-block:26px 56px;display:flex;flex-direction:column;gap:18px;}
-.lights{display:flex;gap:10px;align-items:center;}
-.lights span{
-  width:9px;height:9px;border-radius:50%;
-  background:var(--gold);
-  box-shadow:0 0 10px 2px rgba(255,207,110,.55);
-}
-.lights span:nth-child(3n+2){background:var(--accent);box-shadow:0 0 10px 2px rgba(255,90,99,.5);}
-.lights span:nth-child(4n+1){background:#ffe3a0;box-shadow:0 0 8px 2px rgba(255,227,160,.5);}
 .topbar{
   display:flex;align-items:center;justify-content:space-between;
   padding-top:max(6px, env(safe-area-inset-top,0px));
 }
 .back-link{
-  font-size:.82rem;font-weight:700;color:var(--muted);text-decoration:none;
-  display:inline-flex;align-items:center;gap:6px;
+  font-family:var(--font-mono);font-size:.78rem;font-weight:700;color:var(--muted);text-decoration:none;
+  letter-spacing:.04em;
 }
 .card{
   background:var(--surface);
   border:1px solid var(--line);
   border-radius:var(--radius);
   padding:22px;
-  backdrop-filter:blur(6px);
 }
-html[data-view="poster"] .card{backdrop-filter:none;}
 .btn{
   display:flex;align-items:center;justify-content:center;gap:10px;
-  width:100%;border:none;border-radius:14px;padding:16px 18px;
-  font-family:var(--font-body);font-weight:800;font-size:1rem;
+  width:100%;border:none;border-radius:12px;padding:16px 18px;
+  font-family:var(--font-body);font-weight:700;font-size:1rem;
   cursor:pointer;text-decoration:none;text-align:center;
   -webkit-tap-highlight-color:transparent;
 }
@@ -100,46 +81,31 @@ html[data-view="poster"] .card{backdrop-filter:none;}
   background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
   padding:18px 20px;text-decoration:none;color:var(--fg);
 }
-.nav-card .bar{width:5px;align-self:stretch;border-radius:4px;background:var(--accent);flex:none;}
-.nav-card:nth-child(2) .bar{background:var(--gold);}
-.nav-card:nth-child(3) .bar{background:#f0c3cb;}
-.nav-card .lbl{font-family:var(--font-display);font-size:1.1rem;font-weight:400;}
-.nav-card .sub{font-size:.8rem;color:var(--muted);margin-top:3px;}
+.nav-card .bar{width:4px;align-self:stretch;border-radius:4px;background:var(--accent);flex:none;}
+.nav-card:nth-child(2) .bar{opacity:.7;}
+.nav-card:nth-child(3) .bar{opacity:.45;}
+.nav-card .lbl{font-family:var(--font-display);font-size:1.1rem;font-weight:700;}
+.nav-card .sub{font-family:var(--font-mono);font-size:.74rem;color:var(--muted);margin-top:4px;letter-spacing:.02em;}
 .nav-card:active{transform:scale(.99);}
 .qr-box{
-  background:#fffaf1;border-radius:14px;padding:16px;display:inline-flex;
+  background:var(--fg);border-radius:12px;padding:16px;display:inline-flex;
   align-items:center;justify-content:center;
 }
 .qr-wrap{display:flex;flex-direction:column;align-items:center;gap:14px;text-align:center;}
 .pill{
   display:inline-flex;align-items:center;gap:6px;
   background:var(--surface-strong);border:1px solid var(--line);
-  border-radius:999px;padding:7px 15px;font-size:.8rem;color:var(--muted);
-  font-variant-numeric:tabular-nums;
+  border-radius:999px;padding:7px 15px;font-family:var(--font-mono);font-size:.78rem;color:var(--muted);
+  font-variant-numeric:tabular-nums;letter-spacing:.02em;
 }
 .field-row{display:flex;flex-direction:column;gap:6px;}
-.field-row label{font-size:.78rem;color:var(--muted);font-weight:700;}
+.field-row label{font-family:var(--font-mono);font-size:.74rem;color:var(--muted);font-weight:700;letter-spacing:.05em;text-transform:uppercase;}
 .field-row input{
-  background:var(--surface-strong);border:1px solid var(--line);border-radius:10px;
-  padding:11px 12px;color:var(--fg);font-size:.95rem;font-weight:700;
+  background:var(--surface-strong);border:1px solid var(--line);border-radius:8px;
+  padding:11px 12px;color:var(--fg);font-size:.95rem;font-weight:600;font-family:var(--font-body);
 }
 .field-row input:focus{outline:2px solid var(--accent);outline-offset:1px;}
-details{
-  background:var(--surface);border:1px solid var(--line);border-radius:14px;
-  padding:4px 16px;
-}
-details+details{margin-top:10px;}
-summary{
-  cursor:pointer;padding:14px 0;font-family:var(--font-display);font-size:.98rem;
-  list-style:none;display:flex;align-items:center;justify-content:space-between;
-}
-summary::-webkit-details-marker{display:none;}
-summary::after{content:'+';font-family:var(--font-body);font-weight:900;color:var(--gold);font-size:1.2rem;}
-details[open] summary::after{content:'–';}
-.checklist{margin:0 0 16px;padding:0;list-style:none;display:flex;flex-direction:column;gap:10px;font-size:.88rem;color:var(--fg);}
-.checklist li{display:flex;gap:10px;line-height:1.55;}
-.checklist li::before{content:'';flex:none;width:7px;height:7px;border-radius:2px;background:var(--accent);margin-top:7px;}
-.checklist b{color:var(--gold);}
+[hidden]{display:none!important;}
 
 /* upload view */
 #view-upload .shell{max-width:420px;min-height:100svh;justify-content:center;padding-block:40px;}
@@ -161,51 +127,52 @@ details[open] summary::after{content:'–';}
 .note{font-size:.78rem;color:var(--muted);text-align:center;line-height:1.6;}
 
 /* slideshow view */
-#view-slideshow{position:fixed;inset:0;background:#1a060c;overflow:hidden;}
-.ss-layer{position:absolute;inset:0;background-size:cover;background-position:center;opacity:0;transition:opacity 1.1s ease;}
+#view-slideshow{position:fixed;inset:0;background:#0a0b07;overflow:hidden;}
+.ss-layer{position:absolute;inset:0;background-size:cover;background-position:center;opacity:0;transition:opacity 1.1s ease;filter:saturate(.92) contrast(1.03);}
 .ss-layer.live{opacity:1;}
 .ss-overlay{
   position:absolute;left:0;right:0;bottom:0;
   padding:18px max(18px, env(safe-area-inset-right,0px)) max(18px, env(safe-area-inset-bottom,0px)) max(18px, env(safe-area-inset-left,0px));
   display:flex;justify-content:space-between;align-items:flex-end;
-  background:linear-gradient(transparent, rgba(20,5,10,.7));
-  color:#fdf2e6;pointer-events:none;
+  background:linear-gradient(transparent, rgba(10,11,7,.75));
+  color:#ece4d2;pointer-events:none;
 }
-.ss-party{font-family:var(--font-display);font-size:1.15rem;}
-.ss-date{font-size:.75rem;color:#e3b7c0;}
-.ss-count{font-size:.75rem;color:#e3b7c0;font-variant-numeric:tabular-nums;}
+.ss-party{font-family:var(--font-display);font-size:1.15rem;font-weight:700;text-transform:uppercase;letter-spacing:.01em;}
+.ss-date{font-family:var(--font-mono);font-size:.72rem;color:#c3c3a8;letter-spacing:.03em;}
+.ss-count{font-family:var(--font-mono);font-size:.72rem;color:#c3c3a8;font-variant-numeric:tabular-nums;}
 .ss-topbar{
   position:absolute;top:max(16px, env(safe-area-inset-top,0px));left:max(16px, env(safe-area-inset-left,0px));
   right:max(16px, env(safe-area-inset-right,0px));
   display:flex;justify-content:space-between;align-items:center;
 }
 .ss-back{
-  background:rgba(20,5,10,.45);border:1px solid rgba(255,244,232,.22);color:#fdf2e6;
-  border-radius:10px;padding:9px 13px;font-size:.78rem;text-decoration:none;
+  background:rgba(10,11,7,.5);border:1px solid rgba(236,228,210,.22);color:#ece4d2;
+  border-radius:8px;padding:9px 13px;font-family:var(--font-mono);font-size:.74rem;text-decoration:none;letter-spacing:.03em;
 }
 .ss-fs{
-  background:rgba(20,5,10,.45);border:1px solid rgba(255,244,232,.22);color:#fdf2e6;
-  border-radius:10px;padding:9px 13px;font-size:.78rem;cursor:pointer;
+  background:rgba(10,11,7,.5);border:1px solid rgba(236,228,210,.22);color:#ece4d2;
+  border-radius:8px;padding:9px 13px;font-family:var(--font-mono);font-size:.74rem;cursor:pointer;letter-spacing:.03em;
 }
 .ss-empty{
   position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
-  gap:18px;text-align:center;padding:24px;color:#fdf2e6;
+  gap:18px;text-align:center;padding:24px;color:#ece4d2;
 }
 .ss-empty h2{font-size:1.4rem;}
 
 /* poster view */
 #view-poster .shell{max-width:640px;}
 .poster-sheet{
-  background:var(--surface);border:1px solid var(--line);border-radius:12px;
+  background:var(--surface);border:1px solid var(--line);border-radius:10px;
   padding:48px 36px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:20px;
   aspect-ratio:210/297;width:100%;justify-content:center;
 }
-.poster-sheet h1{font-size:2.1rem;line-height:1.2;color:var(--accent);}
-.poster-sheet .tag{font-size:1.05rem;font-weight:700;color:var(--fg);}
-.poster-sheet .foot{font-size:.85rem;color:var(--muted);}
+.poster-sheet h1{font-size:2.3rem;line-height:1.1;color:var(--accent);text-transform:uppercase;letter-spacing:.01em;}
+.poster-sheet .tag{font-family:var(--font-mono);font-size:.92rem;font-weight:700;color:var(--fg);letter-spacing:.02em;}
+.poster-sheet .foot{font-family:var(--font-mono);font-size:.76rem;color:var(--muted);letter-spacing:.02em;}
 .print-hint{font-size:.78rem;color:var(--muted);text-align:center;}
 @media print{
   body *{visibility:hidden;}
+  body::after{display:none;}
   #view-poster, #view-poster *{visibility:visible;}
   #view-poster{position:absolute;inset:0;}
   #view-poster .shell{max-width:none;padding:0;margin:0;}
@@ -215,9 +182,8 @@ details[open] summary::after{content:'–';}
 }
 @media (max-width:420px){
   .poster-sheet{padding:32px 22px;}
-  .poster-sheet h1{font-size:1.6rem;}
+  .poster-sheet h1{font-size:1.7rem;}
 }
-[hidden]{display:none!important;}
 </style>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
@@ -226,48 +192,51 @@ details[open] summary::after{content:'–';}
 <!-- ===================== HOME ===================== -->
 <section id="view-home" class="view">
   <div class="shell">
-    <div style="display:flex;flex-direction:column;gap:10px;">
-      <div class="lights"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
-      <span class="eyebrow">포토월 라이브</span>
-      <h1 id="home-title" style="font-size:2rem;">파티 포토월</h1>
+    <div style="display:flex;flex-direction:column;gap:8px;">
+      <span class="eyebrow">Photowall Live</span>
+      <h1 id="home-title" style="font-size:2rem;text-transform:uppercase;">Welcome Strangers</h1>
     </div>
 
     <div class="card" style="display:flex;flex-direction:column;gap:14px;">
       <div class="field-row">
-        <label for="in-name">파티 이름</label>
-        <input id="in-name" type="text" maxlength="40" placeholder="우리의 파티">
+        <label for="in-name">Party name</label>
+        <input id="in-name" type="text" maxlength="40" placeholder="Welcome Strangers">
       </div>
       <div class="field-row">
-        <label for="in-date">날짜</label>
-        <input id="in-date" type="text" maxlength="30" placeholder="2026. 11. 14.">
+        <label for="in-date">Date &amp; time</label>
+        <input id="in-date" type="text" maxlength="40" placeholder="Fri Nov 20 · Doors at 7">
       </div>
-      <p class="note" style="text-align:left;">이 기기에만 저장돼요. 포스터·슬라이드쇼에 바로 반영돼요.</p>
+      <div class="field-row">
+        <label for="in-venue">Location</label>
+        <input id="in-venue" type="text" maxlength="40" placeholder="Kinetic House Sinchon">
+      </div>
+      <p class="note" style="text-align:left;">Saved on this device only. Updates the poster and slideshow instantly.</p>
     </div>
 
     <div class="card qr-wrap">
-      <span class="eyebrow">업로드 QR</span>
+      <span class="eyebrow">Scan to upload</span>
       <div class="qr-box"><div id="home-qr"></div></div>
-      <p class="note">이 QR을 스캔하면 업로드 페이지로 바로 연결돼요. 입구·바에는 포스터를 인쇄해 붙이세요.</p>
-      <span class="pill">지금까지 <span id="home-count">–</span>장 업로드됨</span>
+      <p class="note">Scanning this QR opens the upload page. Print the poster for the door and the bar.</p>
+      <span class="pill"><span id="home-count">–</span> photos uploaded so far</span>
     </div>
 
     <div class="nav-grid">
       <a class="nav-card" href="#upload"><span class="bar"></span>
         <span>
-          <div class="lbl">업로드 페이지</div>
-          <div class="sub">손님용 · QR이 여는 화면</div>
+          <div class="lbl">Upload page</div>
+          <div class="sub">FOR GUESTS — WHAT THE QR OPENS</div>
         </span>
       </a>
       <a class="nav-card" href="#slideshow"><span class="bar"></span>
         <span>
-          <div class="lbl">슬라이드쇼 열기</div>
-          <div class="sub">빔프로젝터·노트북에 전체화면으로</div>
+          <div class="lbl">Open slideshow</div>
+          <div class="sub">FULLSCREEN ON THE PROJECTOR LAPTOP</div>
         </span>
       </a>
       <a class="nav-card" href="#poster"><span class="bar"></span>
         <span>
-          <div class="lbl">안내 포스터</div>
-          <div class="sub">A4 인쇄용 · 입구·바에 부착</div>
+          <div class="lbl">Door poster</div>
+          <div class="sub">PRINT ON A4 — DOOR &amp; BAR</div>
         </span>
       </a>
     </div>
@@ -277,26 +246,25 @@ details[open] summary::after{content:'–';}
 <!-- ===================== UPLOAD ===================== -->
 <section id="view-upload" class="view" hidden>
   <div class="shell">
-    <div class="topbar no-print"><a class="back-link" href="#home">← 처음으로</a></div>
+    <div class="topbar no-print"><a class="back-link" href="#home">← HOME</a></div>
     <div class="upload-hero">
-      <div class="lights"><span></span><span></span><span></span><span></span><span></span></div>
-      <span class="eyebrow" id="up-eyebrow">포토월 라이브</span>
-      <h1>사진을 올려주세요</h1>
-      <p class="note">찍은 사진이 화면에 바로 떠요. 로그인 필요 없어요.</p>
+      <span class="eyebrow" id="up-eyebrow">Welcome Strangers</span>
+      <h1>Add your photos</h1>
+      <p class="note">Shows up on screen right away. No login needed.</p>
     </div>
 
     <div class="upload-actions">
-      <label class="btn btn-accent" for="file-camera">카메라로 찍기</label>
+      <label class="btn btn-accent" for="file-camera">Take a photo</label>
       <input id="file-camera" type="file" accept="image/*" capture="environment">
-      <label class="btn btn-outline" for="file-gallery">갤러리에서 선택 (여러 장 가능)</label>
+      <label class="btn btn-outline" for="file-gallery">Choose from gallery (multiple OK)</label>
       <input id="file-gallery" type="file" accept="image/*" multiple>
     </div>
 
     <div class="status-area" id="up-status">
-      <p class="status-idle">사진을 고르면 바로 업로드가 시작돼요.</p>
+      <p class="status-idle">Pick a photo and the upload starts right away.</p>
     </div>
 
-    <p class="note">얼굴이 나오는 게 부담스러우면 운영진에게 말씀해주세요</p>
+    <p class="note">Rather not be in a photo? Just tell one of us.</p>
   </div>
 </section>
 
@@ -305,18 +273,18 @@ details[open] summary::after{content:'–';}
   <div class="ss-layer" id="ss-a"></div>
   <div class="ss-layer" id="ss-b"></div>
   <div class="ss-empty no-print" id="ss-empty">
-    <span class="eyebrow" style="color:#ffcf6e;">포토월 라이브</span>
-    <h2>첫 사진을 기다리는 중…</h2>
+    <span class="eyebrow">Photowall Live</span>
+    <h2>Waiting for the first photo…</h2>
     <div class="qr-box"><div id="ss-qr"></div></div>
-    <p style="color:#e3b7c0;font-size:.85rem;">QR을 스캔해서 첫 사진을 올려주세요</p>
+    <p style="color:#c3c3a8;font-size:.85rem;font-family:var(--font-mono);">Scan the QR to upload the first one</p>
   </div>
   <div class="ss-topbar no-print">
-    <a class="ss-back" href="#home">← 처음으로</a>
-    <button class="ss-fs" id="ss-fs-btn">전체화면</button>
+    <a class="ss-back" href="#home">← HOME</a>
+    <button class="ss-fs" id="ss-fs-btn">FULLSCREEN</button>
   </div>
   <div class="ss-overlay no-print">
     <div>
-      <div class="ss-party" id="ss-party">파티 포토월</div>
+      <div class="ss-party" id="ss-party">Welcome Strangers</div>
       <div class="ss-date" id="ss-date"></div>
     </div>
     <div class="ss-count" id="ss-count"></div>
@@ -326,23 +294,22 @@ details[open] summary::after{content:'–';}
 <!-- ===================== POSTER ===================== -->
 <section id="view-poster" class="view" hidden>
   <div class="shell">
-    <div class="topbar no-print"><a class="back-link" href="#home">← 처음으로</a></div>
+    <div class="topbar no-print"><a class="back-link" href="#home">← HOME</a></div>
     <div class="no-print" style="display:flex;flex-direction:column;gap:4px;">
-      <span class="eyebrow">안내 포스터 · A4</span>
-      <h1 style="font-size:1.6rem;">입구 · 바 부착용</h1>
-      <p class="print-hint">Cmd/Ctrl + P 로 인쇄하세요 (A4, 여백 없음 권장)</p>
+      <span class="eyebrow">Door poster · A4</span>
+      <h1 style="font-size:1.6rem;">For the door &amp; bar</h1>
+      <p class="print-hint">Print with Cmd/Ctrl+P (A4, no margins recommended)</p>
     </div>
 
     <div class="poster-sheet">
-      <div class="lights"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
-      <span class="eyebrow" id="poster-eyebrow" style="color:var(--accent);">포토월 라이브</span>
-      <h1 id="poster-title">우리의 파티</h1>
+      <span class="eyebrow" id="poster-eyebrow">Photowall Live</span>
+      <h1 id="poster-title">Welcome Strangers</h1>
       <div class="qr-box"><div id="poster-qr"></div></div>
       <div>
-        <div class="tag">찍은 사진 여기 올리면 화면에 바로 떠요</div>
-        <div class="tag" style="color:var(--accent);">→ QR 스캔</div>
+        <div class="tag">Upload here — it hits the screen instantly</div>
+        <div class="tag" style="color:var(--accent);">→ Scan the QR</div>
       </div>
-      <div class="foot">로그인 필요 없어요 · 얼굴 노출 원치 않으면 운영진에게 말해주세요</div>
+      <div class="foot">No login needed · Don't want to be seen? Tell a host</div>
       <div class="foot" id="poster-date"></div>
     </div>
   </div>
@@ -363,20 +330,22 @@ details[open] summary::after{content:'–';}
     }
   } catch (e) { sb = null; }
 
-  var DEFAULTS = { name: '우리의 파티', date: '2026. 11. 14.' };
+  var DEFAULTS = { name: 'Welcome Strangers', date: 'Fri Nov 20 · Doors at 7', venue: 'Kinetic House Sinchon' };
 
   function loadSettings(){
     try {
       return {
         name: localStorage.getItem('pw_name') || DEFAULTS.name,
-        date: localStorage.getItem('pw_date') || DEFAULTS.date
+        date: localStorage.getItem('pw_date') || DEFAULTS.date,
+        venue: localStorage.getItem('pw_venue') || DEFAULTS.venue
       };
-    } catch(e){ return { name: DEFAULTS.name, date: DEFAULTS.date }; }
+    } catch(e){ return { name: DEFAULTS.name, date: DEFAULTS.date, venue: DEFAULTS.venue }; }
   }
   function saveSettings(s){
     try {
       localStorage.setItem('pw_name', s.name);
       localStorage.setItem('pw_date', s.date);
+      localStorage.setItem('pw_venue', s.venue);
     } catch(e){}
   }
 
@@ -396,35 +365,43 @@ details[open] summary::after{content:'–';}
       text: text,
       width: size || 200,
       height: size || 200,
-      colorDark: '#331019',
-      colorLight: '#fffaf1',
+      colorDark: '#1c1206',
+      colorLight: '#ece4d2',
       correctLevel: QRCode.CorrectLevel.M
     });
   }
 
   function applySettingsToText(){
     var s = loadSettings();
+    var dateLine = s.date + (s.venue ? ' · ' + s.venue : '');
     var home = document.getElementById('home-title'); if (home) home.textContent = s.name;
     var posterTitle = document.getElementById('poster-title'); if (posterTitle) posterTitle.textContent = s.name;
-    var posterDate = document.getElementById('poster-date'); if (posterDate) posterDate.textContent = s.date;
+    var posterDate = document.getElementById('poster-date'); if (posterDate) posterDate.textContent = dateLine;
     var ssParty = document.getElementById('ss-party'); if (ssParty) ssParty.textContent = s.name;
-    var ssDate = document.getElementById('ss-date'); if (ssDate) ssDate.textContent = s.date;
+    var ssDate = document.getElementById('ss-date'); if (ssDate) ssDate.textContent = dateLine;
     var upEyebrow = document.getElementById('up-eyebrow'); if (upEyebrow) upEyebrow.textContent = s.name;
   }
 
   function initHomeInputs(){
     var nameInput = document.getElementById('in-name');
     var dateInput = document.getElementById('in-date');
-    if (!nameInput || !dateInput) return;
+    var venueInput = document.getElementById('in-venue');
+    if (!nameInput || !dateInput || !venueInput) return;
     var s = loadSettings();
     nameInput.value = s.name;
     dateInput.value = s.date;
+    venueInput.value = s.venue;
     function persist(){
-      saveSettings({ name: nameInput.value.trim() || DEFAULTS.name, date: dateInput.value.trim() || DEFAULTS.date });
+      saveSettings({
+        name: nameInput.value.trim() || DEFAULTS.name,
+        date: dateInput.value.trim() || DEFAULTS.date,
+        venue: venueInput.value.trim() || DEFAULTS.venue
+      });
       applySettingsToText();
     }
     nameInput.addEventListener('input', persist);
     dateInput.addEventListener('input', persist);
+    venueInput.addEventListener('input', persist);
   }
 
   function refreshHomeCount(){
@@ -461,23 +438,23 @@ details[open] summary::after{content:'–';}
 
   function handleFiles(fileList){
     if (!sb){
-      setUploadStatus('<p class="status-idle">업로드 서비스를 불러오지 못했어요. 새로고침 해주세요.</p>');
+      setUploadStatus('<p class="status-idle">Couldn\'t load the upload service. Refresh and try again.</p>');
       return;
     }
     var files = Array.prototype.slice.call(fileList || []);
     if (!files.length) return;
     var total = files.length, done = 0, failed = 0;
-    setUploadStatus('<div style="display:flex;flex-direction:column;align-items:center;gap:10px;"><div class="spinner"></div><p class="status-idle">업로드 중… (' + done + '/' + total + ')</p></div>');
+    setUploadStatus('<div style="display:flex;flex-direction:column;align-items:center;gap:10px;"><div class="spinner"></div><p class="status-idle">Uploading… (' + done + '/' + total + ')</p></div>');
 
     function next(i){
       if (i >= files.length){
         if (failed === 0){
-          setUploadStatus('<div class="ok-badge"><div class="ok-circle">✓</div><p class="status-idle">고마워요! 화면에 곧 떠요</p></div>');
+          setUploadStatus('<div class="ok-badge"><div class="ok-circle">✓</div><p class="status-idle">Thanks — it\'ll show up soon</p></div>');
         } else {
-          setUploadStatus('<p class="status-idle">' + (total - failed) + '장 업로드 완료, ' + failed + '장 실패했어요. 다시 시도해주세요.</p>');
+          setUploadStatus('<p class="status-idle">' + (total - failed) + ' uploaded, ' + failed + ' failed. Please try again.</p>');
         }
         setTimeout(function(){
-          setUploadStatus('<p class="status-idle">사진을 고르면 바로 업로드가 시작돼요.</p>');
+          setUploadStatus('<p class="status-idle">Pick a photo and the upload starts right away.</p>');
         }, 2600);
         return;
       }
@@ -487,7 +464,7 @@ details[open] summary::after{content:'–';}
       }).catch(function(){
         done++; failed++;
       }).then(function(){
-        setUploadStatus('<div style="display:flex;flex-direction:column;align-items:center;gap:10px;"><div class="spinner"></div><p class="status-idle">업로드 중… (' + done + '/' + total + ')</p></div>');
+        setUploadStatus('<div style="display:flex;flex-direction:column;align-items:center;gap:10px;"><div class="spinner"></div><p class="status-idle">Uploading… (' + done + '/' + total + ')</p></div>');
         next(i + 1);
       });
     }
@@ -513,7 +490,7 @@ details[open] summary::after{content:'–';}
       var data = res && res.data;
       if (data) ssPhotos = data.filter(validName).map(function(f){ return f.name; });
       var countEl = document.getElementById('ss-count');
-      if (countEl) countEl.textContent = ssPhotos.length ? (ssPhotos.length + '장') : '';
+      if (countEl) countEl.textContent = ssPhotos.length ? (ssPhotos.length + ' PHOTOS') : '';
       var empty = document.getElementById('ss-empty');
       if (empty) empty.hidden = ssPhotos.length > 0;
     }).catch(function(){});
